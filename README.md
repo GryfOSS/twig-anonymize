@@ -18,3 +18,16 @@ should it minify the hidden part.
 Warning: replacement length is always at least 3 symbols long, no matter the
 `keepLength` setting.
 
+Installation
+============
+
+Since this is not a bundle for Symfony or any other framework but just a simple
+filter you may need to tell your framework how to look for the filter.
+
+In Symfony, in your `services.yaml`, add under `services`:
+```yaml
+    praetorian.twig.anonymize_extension:
+        class: 'Praetorian\Twig\Extension\AnonymizeExtension'
+        tags:
+            - { name: twig.extension }
+```

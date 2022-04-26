@@ -5,7 +5,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Praetoriantechnology\\TwigAnonymize\\": "src/"
+            "Praetorian\\Twig\\Extension\\": "src/"
         }
     },
     "authors": [
