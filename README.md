@@ -21,13 +21,21 @@ Warning: replacement length is always at least 3 symbols long, no matter the
 Installation
 ============
 
+Install using composer:
+```bash
+composer require praetoriantechnology/twig-anonymize:dev-main
+```
+
+**NOTE**: The `dev-main` references to the main branch, until there is a stable
+version that is required.
+
 Since this is not a bundle for Symfony or any other framework but just a simple
 filter you may need to tell your framework how to look for the filter.
 
 In Symfony, in your `services.yaml`, add under `services`:
 ```yaml
     praetorian.twig.anonymize_extension:
-        class: 'Praetorian\Twig\Extension\AnonymizeExtension'
+        class: Praetorian\Twig\Extension\AnonymizeExtension
         tags:
             - { name: twig.extension }
 ```
