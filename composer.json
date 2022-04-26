@@ -1,0 +1,21 @@
+{
+    "name": "praetoriantechnology/twig-anonymize",
+    "description": "Basic anonymize filter which leaves first and last letter and replaces rest with asterisks.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Praetoriantechnology\\TwigAnonymize\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Bartosz",
+            "email": "bartosz@praetorian.technology"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "twig/twig": "^2.12|^3.0"
+    }
+}
