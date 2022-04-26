@@ -15,6 +15,13 @@ Filter has few options:
 should it minify the hidden part.
 * replacementChar: character to be used in for the replacement. Defaults to *.
 
+For example:
+```twig
+{{ mytext|anonymize(false, '!') }}
+```
+will not keep original length (replace with 3 symbols) and use '!' as the replacement
+char.
+
 Warning: replacement length is always at least 3 symbols long, no matter the
 `keepLength` setting.
 
