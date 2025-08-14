@@ -41,8 +41,8 @@ filter you may need to tell your framework how to look for the filter.
 
 In Symfony, in your `services.yaml`, add under `services`:
 ```yaml
-    praetorian.twig.anonymize_extension:
-        class: Praetorian\Twig\Extension\AnonymizeExtension
+    gryfoss.twig.anonymize_extension:
+        class: GryfOSS\Twig\Extension\AnonymizeExtension
         tags:
             - { name: twig.extension }
 ```

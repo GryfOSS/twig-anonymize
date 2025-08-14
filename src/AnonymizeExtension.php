@@ -1,6 +1,6 @@
 <?php
 
-namespace Praetorian\Twig\Extension;
+namespace GryfOSS\Twig\Extension;
 
 use InvalidArgumentException;
 use Twig\Extension\AbstractExtension;

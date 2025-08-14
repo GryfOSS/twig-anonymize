@@ -1,11 +1,11 @@
 <?php
 
-namespace Praetorian\Twig\Extension\Tests;
+namespace GryfOSS\Twig\Extension\Tests;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Praetorian\Twig\Extension\AnonymizeExtension;
+use GryfOSS\Twig\Extension\AnonymizeExtension;
 use Twig\TwigFilter;
 
 /**
