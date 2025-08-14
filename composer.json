@@ -1,5 +1,5 @@
 {
-    "name": "praetoriantechnology/twig-anonymize",
+    "name": "gryfoss/twig-anonymize",
     "description": "Basic anonymize filter which leaves first and last letter and replaces rest with asterisks.",
     "type": "library",
     "license": "MIT",
@@ -30,8 +30,9 @@
     },
     "scripts": {
         "test": "phpunit",
-        "test-coverage": "phpunit --coverage-html coverage",
+        "test-coverage": "phpunit --coverage-html coverage --coverage-clover coverage.xml",
         "behat": "behat",
-        "test-all": ["@test", "@behat"]
+        "test-all": ["@test", "@behat"],
+        "check-coverage": "php bin/check-coverage.php"
     }
 }
