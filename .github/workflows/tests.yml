@@ -52,7 +52,7 @@ jobs:
       run: composer require --dev "twig/twig:${{ matrix.twig-version }}" --no-update && composer update
 
     - name: Run PHPUnit tests
-      run: vendor/bin/phpunit --verbose
+      run: vendor/bin/phpunit
 
     - name: Run PHPUnit with coverage
       if: matrix.php-version == '8.4' && matrix.twig-version == '^3.0'
