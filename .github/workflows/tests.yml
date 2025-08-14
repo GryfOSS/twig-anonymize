@@ -1,0 +1,109 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['8.1', '8.2', '8.3', '8.4']
+        twig-version: ['^3.0']
+        include:
+          - php-version: '8.1'
+            twig-version: '^2.12'
+          - php-version: '8.2'
+            twig-version: '^2.12'
+
+    name: PHP ${{ matrix.php-version }} - Twig ${{ matrix.twig-version }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, intl
+        coverage: xdebug
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-${{ matrix.php-version }}-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Install specific Twig version
+      if: matrix.twig-version != '^3.0'
+      run: composer require --dev "twig/twig:${{ matrix.twig-version }}" --no-update && composer update
+
+    - name: Run PHPUnit tests
+      run: vendor/bin/phpunit --verbose
+
+    - name: Run PHPUnit with coverage
+      if: matrix.php-version == '8.4' && matrix.twig-version == '^3.0'
+      run: vendor/bin/phpunit --coverage-clover=coverage.xml --coverage-text --coverage-html=coverage
+
+    - name: Check coverage is 100%
+      if: matrix.php-version == '8.4' && matrix.twig-version == '^3.0'
+      run: composer check-coverage
+
+    - name: Run Behat tests
+      run: vendor/bin/behat --no-snippets
+
+    - name: Upload coverage reports to Codecov
+      if: matrix.php-version == '8.4' && matrix.twig-version == '^3.0'
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  quality:
+    runs-on: ubuntu-latest
+    name: Code Quality
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+        extensions: mbstring, intl
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v4
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-quality-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-quality-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Check PHP syntax
+      run: find src tests -name "*.php" -print0 | xargs -0 -n1 php -l
+
+    - name: Validate composer.json
+      run: composer validate --strict
+
+    - name: Check for security vulnerabilities
+      run: composer audit
