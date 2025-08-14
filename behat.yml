@@ -1,0 +1,17 @@
+default:
+    suites:
+        default:
+            contexts:
+                - FeatureContext
+    extensions:
+        # Any extensions can be added here
+
+    # Configure output formats
+    formatters:
+        pretty:
+            verbose: true
+            paths: false
+            snippets: false
+
+    gherkin:
+        cache: /tmp/behat_cache
