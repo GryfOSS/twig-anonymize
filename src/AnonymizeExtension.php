@@ -8,7 +8,7 @@ use Twig\TwigFilter;
 
 /**
  * Twig extension that provides an anonymize filter for string obfuscation.
- * 
+ *
  * This extension adds an 'anonymize' filter that replaces characters in a string
  * while preserving certain characters based on string length:
  * - Length < 3: Full string replacement
@@ -19,7 +19,7 @@ class AnonymizeExtension extends AbstractExtension
 {
     /**
      * Returns the list of filters provided by this extension.
-     * 
+     *
      * @return TwigFilter[] An array of TwigFilter instances
      */
     public function getFilters()
@@ -31,20 +31,20 @@ class AnonymizeExtension extends AbstractExtension
 
     /**
      * Anonymizes a string by replacing characters while preserving structure.
-     * 
+     *
      * The anonymization behavior depends on the input string length:
      * - Length < 3: Full string gets replaced by the replacement character
      * - Length = 3: First character remains original, rest gets replaced
      * - Length > 3: First and last character remain original, rest gets replaced
-     * 
+     *
      * @param string $input The string to anonymize
      * @param bool $keepLength Whether to maintain the original string length (default: true)
      * @param string $replacemenetChar The character to use for replacement (default: '*')
-     * 
+     *
      * @return string The anonymized string
-     * 
+     *
      * @throws InvalidArgumentException If the replacement character is not exactly 1 character long
-     * 
+     *
      * @example
      * anonymize('a')        // '*'
      * anonymize('hi')       // '**'
@@ -63,7 +63,7 @@ class AnonymizeExtension extends AbstractExtension
         }
 
         $length = mb_strlen($input);
-        
+
         if ($length < 3) {
             // Full string gets replaced by the replacement character
             $replacementLen = $keepLength ? $length : $length;

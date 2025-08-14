@@ -1,6 +1,6 @@
 # Twig Anonymize Extension - Testing
 
-This project now includes **100% unit test coverage** for the AnonymizeExtension with comprehensive PHPDoc documentation.
+This project includes **100% unit test coverage** for the AnonymizeExtension with comprehensive PHPDoc documentation and modern PHPUnit 11 features.
 
 ## Running Tests
 
@@ -11,6 +11,15 @@ composer test
 # Run tests with coverage report
 composer test-coverage
 ```
+
+## Modern PHPUnit Features
+
+This test suite uses modern PHPUnit 11 features including:
+
+- **PHP 8 Attributes**: Uses `#[DataProvider]` instead of deprecated `@dataProvider` annotations
+- **Type Declarations**: Full type hints for all test methods and data providers
+- **Latest PHPUnit**: Compatible with PHPUnit 11.5+ with no deprecation warnings
+- **Modern Configuration**: Uses the latest phpunit.xml schema
 
 ## Documentation
 
@@ -28,6 +37,7 @@ The codebase includes comprehensive PHPDoc documentation for:
 - **Class-level documentation**: Overview of the test suite's purpose and scope
 - **Method documentation**: Descriptions of key test methods and their objectives
 - **Data provider documentation**: Comprehensive explanation of test data structure and coverage
+- **Modern attributes**: Uses PHP 8 attributes for cleaner, more maintainable test code
 
 ## Test Coverage
 

@@ -3,13 +3,14 @@
 namespace Praetorian\Twig\Extension\Tests;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Praetorian\Twig\Extension\AnonymizeExtension;
 use Twig\TwigFilter;
 
 /**
  * Test suite for AnonymizeExtension.
- * 
+ *
  * Provides comprehensive testing of the anonymize filter functionality
  * including edge cases, Unicode support, and error handling.
  */
@@ -31,12 +32,12 @@ class AnonymizeExtensionTest extends TestCase
     public function testGetFilters(): void
     {
         $filters = $this->extension->getFilters();
-        
+
         $this->assertIsArray($filters);
         $this->assertCount(1, $filters);
         $this->assertInstanceOf(TwigFilter::class, $filters[0]);
         $this->assertEquals('anonymize', $filters[0]->getName());
-        
+
         // Test that the filter is callable
         $callable = $filters[0]->getCallable();
         $this->assertIsCallable($callable);
@@ -196,7 +197,7 @@ class AnonymizeExtensionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Replacement char must be exactly 1 character long string.');
-        
+
         $this->extension->anonymize('test', true, '');
     }
 
@@ -204,7 +205,7 @@ class AnonymizeExtensionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Replacement char must be exactly 1 character long string.');
-        
+
         $this->extension->anonymize('test', true, '**');
     }
 
@@ -212,7 +213,7 @@ class AnonymizeExtensionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Replacement char must be exactly 1 character long string.');
-        
+
         $this->extension->anonymize('test', true, 'ab');
     }
 
@@ -220,20 +221,19 @@ class AnonymizeExtensionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Replacement char must be exactly 1 character long string.');
-        
+
         $this->extension->anonymize('test', true, 'ñó');
     }
 
     /**
      * Test anonymization with various inputs using data provider.
-     * 
-     * @dataProvider anonymizeDataProvider
-     * 
+     *
      * @param string $input The input string to anonymize
      * @param bool $keepLength Whether to keep the original length
      * @param string $replacementChar The replacement character to use
      * @param string $expected The expected anonymized result
      */
+    #[DataProvider('anonymizeDataProvider')]
     public function testAnonymizeWithDataProvider(
         string $input,
         bool $keepLength,
@@ -246,14 +246,16 @@ class AnonymizeExtensionTest extends TestCase
 
     /**
      * Data provider for anonymization test cases.
-     * 
+     *
      * Provides comprehensive test data covering all anonymization scenarios:
      * - Different string lengths (< 3, = 3, > 3)
      * - Various keepLength settings
      * - Different replacement characters
      * - Unicode and emoji support
      * - Special characters and edge cases
-     * 
+     *
+     * Used with the #[DataProvider] attribute for modern PHPUnit testing.
+     *
      * @return array<string, array{string, bool, string, string}> Test case data
      */
     public static function anonymizeDataProvider(): array
@@ -261,17 +263,17 @@ class AnonymizeExtensionTest extends TestCase
         return [
             // Empty string
             'Empty string' => ['', true, '*', ''],
-            
+
             // Length < 3: full replacement
             'Single char with keep length' => ['a', true, '*', '*'],
             'Single char without keep length' => ['a', false, '*', '*'],
             'Two chars with keep length' => ['ab', true, '*', '**'],
             'Two chars without keep length' => ['ab', false, '*', '**'],
-            
+
             // Length == 3: first char + replacement
             'Three chars with keep length' => ['abc', true, '*', 'a**'],
             'Three chars without keep length' => ['abc', false, '*', 'a**'],
-            
+
             // Length > 3: first + replacement + last
             'Four chars with keep length' => ['abcd', true, '*', 'a**d'],
             'Four chars without keep length' => ['abcd', false, '*', 'a***d'],
@@ -279,26 +281,26 @@ class AnonymizeExtensionTest extends TestCase
             'Five chars without keep length' => ['abcde', false, '*', 'a***e'],
             'Long string with keep length' => ['hello world', true, '*', 'h*********d'],
             'Long string without keep length' => ['hello world', false, '*', 'h***d'],
-            
+
             // Custom replacement char
             'Custom replacement char' => ['test', true, '#', 't##t'],
-            
+
             // Unicode strings
             'Unicode single char' => ['ñ', true, '*', '*'],
             'Unicode two chars' => ['ñó', true, '*', '**'],
             'Unicode three chars' => ['ñóü', true, '*', 'ñ**'],
             'Unicode four chars' => ['café', true, '•', 'c••é'],
             'Unicode long string' => ['привет', true, '*', 'п****т'],
-            
+
             // Numbers and special chars
             'Numbers' => ['12345', true, 'X', '1XXX5'],
             'Special chars' => ['!@#$%', true, '-', '!---%'],
             'Mixed content' => ['a1!b2@c', true, '_', 'a_____c'],
-            
+
             // Whitespace
             'Whitespace only' => ['   ', true, '*', ' **'],
             'With spaces' => ['a b c d e', true, '_', 'a_______e'],
-            
+
             // Emojis
             'Emoji single' => ['🚀', true, '*', '*'],
             'Emoji two' => ['🚀🎉', true, '*', '**'],
@@ -312,17 +314,17 @@ class AnonymizeExtensionTest extends TestCase
         // Test with various whitespace
         $result = $this->extension->anonymize(' ', true, '*');
         $this->assertEquals('*', $result);
-        
+
         $result = $this->extension->anonymize('  ', true, '*');
         $this->assertEquals('**', $result);
-        
+
         $result = $this->extension->anonymize('   ', true, '*');
         $this->assertEquals(' **', $result);
-        
+
         // Test with newlines and tabs
         $result = $this->extension->anonymize("a\nb", true, '*');
         $this->assertEquals('a**', $result); // 3 chars: first + replacement
-        
+
         $result = $this->extension->anonymize("a\n\tb", true, '*');
         $this->assertEquals('a**b', $result); // 4 chars: first+last
     }
@@ -330,18 +332,18 @@ class AnonymizeExtensionTest extends TestCase
     public function testAnonymizeBehaviorByLength(): void
     {
         // Verify the three different behaviors based on length
-        
+
         // Length < 3: full replacement
         for ($i = 1; $i <= 2; $i++) {
             $input = str_repeat('a', $i);
             $result = $this->extension->anonymize($input, true, '*');
             $this->assertEquals(str_repeat('*', $i), $result, "Failed for length $i");
         }
-        
+
         // Length == 3: first + replacement
         $result = $this->extension->anonymize('abc', true, '*');
         $this->assertEquals('a**', $result);
-        
+
         // Length > 3: first + replacement + last
         for ($i = 4; $i <= 10; $i++) {
             $input = str_repeat('a', $i - 1) . 'z'; // 'aaa...z'
