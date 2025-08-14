@@ -8,6 +8,11 @@
             "Praetorian\\Twig\\Extension\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Praetorian\\Twig\\Extension\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Bartosz",
@@ -17,5 +22,12 @@
     "minimum-stability": "dev",
     "require": {
         "twig/twig": "^2.12|^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5|^10.0|^11.0"
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage"
     }
 }
